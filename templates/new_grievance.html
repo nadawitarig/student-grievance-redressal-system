@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}New grievance{% endblock %}
+{% block content %}
+<section class="form-section">
+    <div class="form-card wide-card">
+        <div class="form-heading">
+            <span class="eyebrow">New grievance</span>
+            <h1>Tell us what happened</h1>
+            <p>Provide clear, factual information so the concern can be reviewed efficiently.</p>
+        </div>
+        <form method="post" class="stacked-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+            <label for="title">Short title</label>
+            <input id="title" name="title" maxlength="120" required placeholder="Example: Laboratory equipment is unavailable" value="{{ request.form.get('title', '') }}">
+
+            <div class="form-grid">
+                <div>
+                    <label for="category">Category</label>
+                    <select id="category" name="category" required>
+                        <option value="">Choose a category</option>
+                        {% for category in categories %}
+                            <option value="{{ category }}" {% if request.form.get('category') == category %}selected{% endif %}>{{ category }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="priority">Priority</label>
+                    <select id="priority" name="priority" required>
+                        {% for priority in priorities %}
+                            <option value="{{ priority }}" {% if request.form.get('priority', 'medium') == priority %}selected{% endif %}>{{ priority|capitalize }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <label for="description">Detailed description</label>
+            <textarea id="description" name="description" rows="8" maxlength="2000" required placeholder="Explain the issue, when it happened and any relevant context.">{{ request.form.get('description', '') }}</textarea>
+            <small>Do not include passwords, financial details or unnecessary sensitive information.</small>
+
+            <div class="form-actions">
+                <a class="button button-secondary" href="{{ url_for('student_dashboard') }}">Cancel</a>
+                <button class="button" type="submit">Submit grievance</button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}{{ grievance['reference_no'] }}{% endblock %}
+{% block content %}
+<section class="dashboard-section">
+    <div class="container narrow-container">
+        <a class="back-link" href="{{ url_for('admin_dashboard') if g.user['role'] == 'admin' else url_for('student_dashboard') }}">← Back to dashboard</a>
+        <div class="detail-card">
+            <div class="detail-header">
+                <div>
+                    <span class="reference">{{ grievance['reference_no'] }}</span>
+                    <h1>{{ grievance['title'] }}</h1>
+                </div>
+                <span class="status status-{{ grievance['status'] }}">{{ status_labels[grievance['status']] }}</span>
+            </div>
+            <div class="detail-meta">
+                <div><span>Category</span><strong>{{ grievance['category'] }}</strong></div>
+                <div><span>Priority</span><strong>{{ grievance['priority']|capitalize }}</strong></div>
+                <div><span>Submitted</span><strong>{{ grievance['created_at'][:16] }}</strong></div>
+            </div>
+            <div class="description-box">
+                <h2>Description</h2>
+                <p>{{ grievance['description'] }}</p>
+            </div>
+        </div>
+
+        <div class="timeline-card">
+            <h2>Progress timeline</h2>
+            <div class="timeline">
+                {% for update in updates %}
+                    <article class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div>
+                            <div class="timeline-top">
+                                <strong>{{ status_labels[update['new_status']] }}</strong>
+                                <time>{{ update['created_at'][:16] }}</time>
+                            </div>
+                            <p>{{ update['message'] }}</p>
+                            <small>{{ update['author_name'] }} · {{ update['author_role']|capitalize }}</small>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

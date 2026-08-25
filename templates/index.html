@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<section class="hero">
+    <div class="container hero-grid">
+        <div>
+            <span class="eyebrow">A clearer path to resolution</span>
+            <h1>Every student concern deserves to be heard.</h1>
+            <p class="hero-copy">
+                Submit grievances securely, follow their progress and receive clear updates
+                through one transparent platform.
+            </p>
+            <div class="hero-actions">
+                {% if g.user %}
+                    <a class="button" href="{{ url_for('admin_dashboard') if g.user['role'] == 'admin' else url_for('student_dashboard') }}">Open dashboard</a>
+                {% else %}
+                    <a class="button" href="{{ url_for('register') }}">Get started</a>
+                    <a class="button button-secondary" href="{{ url_for('login') }}">Sign in</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="hero-panel" aria-label="System workflow">
+            <div class="workflow-item">
+                <span>01</span>
+                <div><strong>Submit</strong><p>Describe the concern and choose a category.</p></div>
+            </div>
+            <div class="workflow-item">
+                <span>02</span>
+                <div><strong>Track</strong><p>Use a unique reference number to follow progress.</p></div>
+            </div>
+            <div class="workflow-item">
+                <span>03</span>
+                <div><strong>Resolve</strong><p>Receive documented updates from administrators.</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="section-heading">
+            <span class="eyebrow">Designed for accountability</span>
+            <h2>Simple for students. Organized for administrators.</h2>
+        </div>
+        <div class="feature-grid">
+            <article class="feature-card">
+                <span class="feature-icon">✓</span>
+                <h3>Transparent tracking</h3>
+                <p>Students can see each status change and response in a clear timeline.</p>
+            </article>
+            <article class="feature-card">
+                <span class="feature-icon">⌕</span>
+                <h3>Centralized management</h3>
+                <p>Administrators can search, filter, prioritize and export grievance records.</p>
+            </article>
+            <article class="feature-card">
+                <span class="feature-icon">◈</span>
+                <h3>Role-based access</h3>
+                <p>Students only access their records while administrators manage the full queue.</p>
+            </article>
+        </div>
+    </div>
+</section>
+{% endblock %}

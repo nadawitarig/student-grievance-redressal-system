@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Student Grievance Redressal System">
+    <title>{% block title %}SGRS{% endblock %} | Student Support</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container nav-wrap">
+            <a class="brand" href="{{ url_for('index') }}" aria-label="SGRS home">
+                <span class="brand-mark">S</span>
+                <span>
+                    <strong>SGRS</strong>
+                    <small>Student Support</small>
+                </span>
+            </a>
+            <nav class="main-nav" aria-label="Main navigation">
+                {% if g.user %}
+                    {% if g.user['role'] == 'admin' %}
+                        <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+                    {% else %}
+                        <a href="{{ url_for('student_dashboard') }}">My Grievances</a>
+                        <a class="button button-small" href="{{ url_for('new_grievance') }}">New Grievance</a>
+                    {% endif %}
+                    <form action="{{ url_for('logout') }}" method="post" class="inline-form">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                        <button class="nav-button" type="submit">Sign out</button>
+                    </form>
+                {% else %}
+                    <a href="{{ url_for('login') }}">Sign in</a>
+                    <a class="button button-small" href="{{ url_for('register') }}">Create account</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container flash-stack" aria-live="polite">
+            {% for category, message in get_flashed_messages(with_categories=true) %}
+                <div class="flash flash-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-wrap">
+            <p>Student Grievance Redressal System</p>
+            <p>Built for transparent, respectful student support.</p>
+        </div>
+    </footer>
+</body>
+</html>

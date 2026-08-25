@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}Admin dashboard{% endblock %}
+{% block content %}
+<section class="dashboard-section">
+    <div class="container">
+        <div class="page-heading heading-actions">
+            <div>
+                <span class="eyebrow">Administration</span>
+                <h1>Grievance queue</h1>
+                <p>Review, organize and respond to student concerns.</p>
+            </div>
+            <a class="button button-secondary" href="{{ url_for('export_grievances', status=filters['status'], category=filters['category'], q=filters['q']) }}">Export CSV</a>
+        </div>
+
+        <div class="metric-grid">
+            <div class="metric-card"><span>Submitted</span><strong>{{ counts['submitted'] }}</strong></div>
+            <div class="metric-card"><span>In Review</span><strong>{{ counts['in_review'] }}</strong></div>
+            <div class="metric-card"><span>Resolved</span><strong>{{ counts['resolved'] }}</strong></div>
+            <div class="metric-card"><span>Rejected</span><strong>{{ counts['rejected'] }}</strong></div>
+        </div>
+
+        <form class="filter-card" method="get">
+            <div>
+                <label for="q">Search</label>
+                <input id="q" name="q" placeholder="Reference, title, student or ID" value="{{ filters['q'] }}">
+            </div>
+            <div>
+                <label for="status">Status</label>
+                <select id="status" name="status">
+                    <option value="">All statuses</option>
+                    {% for status in statuses %}
+                        <option value="{{ status }}" {% if filters['status'] == status %}selected{% endif %}>{{ status_labels[status] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="category">Category</label>
+                <select id="category" name="category">
+                    <option value="">All categories</option>
+                    {% for category in categories %}
+                        <option value="{{ category }}" {% if filters['category'] == category %}selected{% endif %}>{{ category }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button class="button" type="submit">Apply filters</button>
+        </form>
+
+        <div class="table-card">
+            {% if grievances %}
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr><th>Reference</th><th>Student</th><th>Title</th><th>Priority</th><th>Status</th><th>Updated</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for grievance in grievances %}
+                                <tr>
+                                    <td><a class="reference" href="{{ url_for('admin_grievance', grievance_id=grievance['id']) }}">{{ grievance['reference_no'] }}</a></td>
+                                    <td>{{ grievance['student_name'] }}<small class="table-subtext">{{ grievance['student_number'] }}</small></td>
+                                    <td>{{ grievance['title'] }}<small class="table-subtext">{{ grievance['category'] }}</small></td>
+                                    <td><span class="priority priority-{{ grievance['priority'] }}">{{ grievance['priority']|capitalize }}</span></td>
+                                    <td><span class="status status-{{ grievance['status'] }}">{{ status_labels[grievance['status']] }}</span></td>
+                                    <td>{{ grievance['updated_at'][:10] }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty-state"><span>⌕</span><h2>No matching grievances</h2><p>Try clearing or changing the current filters.</p></div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

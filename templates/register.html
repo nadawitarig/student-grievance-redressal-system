@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Create account{% endblock %}
+{% block content %}
+<section class="form-section">
+    <div class="form-card">
+        <div class="form-heading">
+            <span class="eyebrow">Student registration</span>
+            <h1>Create your account</h1>
+            <p>Use your student information to submit and track grievances.</p>
+        </div>
+        <form method="post" class="stacked-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <div class="form-grid">
+                <div>
+                    <label for="full_name">Full name</label>
+                    <input id="full_name" name="full_name" maxlength="100" autocomplete="name" required value="{{ request.form.get('full_name', '') }}">
+                </div>
+                <div>
+                    <label for="student_id">Student ID</label>
+                    <input id="student_id" name="student_id" maxlength="30" autocomplete="off" required value="{{ request.form.get('student_id', '') }}">
+                </div>
+            </div>
+
+            <label for="email">Email address</label>
+            <input id="email" name="email" type="email" autocomplete="email" required value="{{ request.form.get('email', '') }}">
+
+            <div class="form-grid">
+                <div>
+                    <label for="password">Password</label>
+                    <input id="password" name="password" type="password" minlength="8" autocomplete="new-password" required>
+                    <small>Minimum 8 characters</small>
+                </div>
+                <div>
+                    <label for="confirm_password">Confirm password</label>
+                    <input id="confirm_password" name="confirm_password" type="password" minlength="8" autocomplete="new-password" required>
+                </div>
+            </div>
+
+            <button class="button button-full" type="submit">Create account</button>
+        </form>
+        <p class="form-note">Already registered? <a href="{{ url_for('login') }}">Sign in</a></p>
+    </div>
+</section>
+{% endblock %}

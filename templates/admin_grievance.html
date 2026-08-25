@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Manage {{ grievance['reference_no'] }}{% endblock %}
+{% block content %}
+<section class="dashboard-section">
+    <div class="container narrow-container">
+        <a class="back-link" href="{{ url_for('admin_dashboard') }}">← Back to grievance queue</a>
+        <div class="detail-card">
+            <div class="detail-header">
+                <div>
+                    <span class="reference">{{ grievance['reference_no'] }}</span>
+                    <h1>{{ grievance['title'] }}</h1>
+                </div>
+                <span class="status status-{{ grievance['status'] }}">{{ status_labels[grievance['status']] }}</span>
+            </div>
+            <div class="detail-meta detail-meta-four">
+                <div><span>Student</span><strong>{{ grievance['student_name'] }}</strong><small>{{ grievance['student_number'] }}</small></div>
+                <div><span>Category</span><strong>{{ grievance['category'] }}</strong></div>
+                <div><span>Priority</span><strong>{{ grievance['priority']|capitalize }}</strong></div>
+                <div><span>Submitted</span><strong>{{ grievance['created_at'][:16] }}</strong></div>
+            </div>
+            <div class="description-box">
+                <h2>Description</h2>
+                <p>{{ grievance['description'] }}</p>
+            </div>
+        </div>
+
+        <div class="form-card wide-card admin-update-card">
+            <div class="form-heading">
+                <span class="eyebrow">Administrator action</span>
+                <h2>Update grievance</h2>
+            </div>
+            <form method="post" class="stacked-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <label for="status">Status</label>
+                <select id="status" name="status" required>
+                    {% for status in statuses %}
+                        <option value="{{ status }}" {% if grievance['status'] == status %}selected{% endif %}>{{ status_labels[status] }}</option>
+                    {% endfor %}
+                </select>
+                <label for="message">Response or internal update</label>
+                <textarea id="message" name="message" rows="5" maxlength="1000" placeholder="Explain the action taken or information required."></textarea>
+                <button class="button" type="submit">Save update</button>
+            </form>
+        </div>
+
+        <div class="timeline-card">
+            <h2>Activity history</h2>
+            <div class="timeline">
+                {% for update in updates %}
+                    <article class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div>
+                            <div class="timeline-top"><strong>{{ status_labels[update['new_status']] }}</strong><time>{{ update['created_at'][:16] }}</time></div>
+                            <p>{{ update['message'] }}</p>
+                            <small>{{ update['author_name'] }} · {{ update['author_role']|capitalize }}</small>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

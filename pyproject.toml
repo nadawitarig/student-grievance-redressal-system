@@ -1,0 +1,11 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.coverage.run]
+source = ["app", "database"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true

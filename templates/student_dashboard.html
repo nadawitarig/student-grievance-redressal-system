@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}My grievances{% endblock %}
+{% block content %}
+<section class="dashboard-section">
+    <div class="container">
+        <div class="page-heading heading-actions">
+            <div>
+                <span class="eyebrow">Student dashboard</span>
+                <h1>My grievances</h1>
+                <p>Track every concern from submission to resolution.</p>
+            </div>
+            <a class="button" href="{{ url_for('new_grievance') }}">Submit grievance</a>
+        </div>
+
+        <div class="metric-grid">
+            <div class="metric-card"><span>Submitted</span><strong>{{ counts['submitted'] }}</strong></div>
+            <div class="metric-card"><span>In Review</span><strong>{{ counts['in_review'] }}</strong></div>
+            <div class="metric-card"><span>Resolved</span><strong>{{ counts['resolved'] }}</strong></div>
+            <div class="metric-card"><span>Total</span><strong>{{ grievances|length }}</strong></div>
+        </div>
+
+        <div class="table-card">
+            {% if grievances %}
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr><th>Reference</th><th>Title</th><th>Category</th><th>Status</th><th>Updated</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for grievance in grievances %}
+                                <tr>
+                                    <td><a class="reference" href="{{ url_for('grievance_detail', grievance_id=grievance['id']) }}">{{ grievance['reference_no'] }}</a></td>
+                                    <td>{{ grievance['title'] }}</td>
+                                    <td>{{ grievance['category'] }}</td>
+                                    <td><span class="status status-{{ grievance['status'] }}">{{ status_labels[grievance['status']] }}</span></td>
+                                    <td>{{ grievance['updated_at'][:10] }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <span>◎</span>
+                    <h2>No grievances yet</h2>
+                    <p>When you submit a grievance, its progress will appear here.</p>
+                    <a class="button" href="{{ url_for('new_grievance') }}">Submit your first grievance</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
